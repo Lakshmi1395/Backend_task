@@ -1,0 +1,30 @@
+services:
+  database:
+    container_name: database
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    networks:
+      - task-main
+    volumes:
+      - ./db-data:/var/lib/postgresql/data:rw
+  #      - ./db-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - '5050:80'
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - task-main
+    volumes:
+      - ./pgadmin-data/:/var/lib/pgadmin/
+
+networks:
+  task-main:
+    driver: bridge
